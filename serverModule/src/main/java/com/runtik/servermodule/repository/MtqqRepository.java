@@ -3,9 +3,12 @@ package com.runtik.servermodule.repository;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.runtik.servermodule.dto.Message;
-import com.runtik.servermodule.entity.Current;
+import com.runtik.servermodule.entity.CurrentSensorValue;
+import com.runtik.servermodule.entity.Sensor;
+import com.runtik.servermodule.service.SensorService;
 import jakarta.annotation.PostConstruct;
 import java.time.OffsetDateTime;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +26,8 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 @Log4j2
 public class MtqqRepository {
-    private final CurrentRepository currentRepository;
+    private final CurrentSensorValueRepository currentSensorValueRepository;
+    private final SensorRepository sensorRepository;
     @Getter
     @Value("${broker.qos}")
     private int qos;
@@ -52,13 +56,16 @@ public class MtqqRepository {
             public void messageArrived(String s, MqttMessage mqttMessage) {
                 log.info("messageArrived: " + mqttMessage.toString());
                 try {
-
                     Message message = gson.fromJson(mqttMessage.toString(), Message.class);
-                    currentRepository.save(new Current().builder()
-                                                        .type(message.getType())
-                                                        .temperature(message.getValue())
-                                                        .createdAt(OffsetDateTime.now())
-                                                        .build());
+                    Optional<Sensor> byId = sensorRepository.findById(message.getId());
+                    if(byId.isEmpty()){
+                        log.info("sensor {} not found", message.getId());
+                    }
+                    currentSensorValueRepository.save(new CurrentSensorValue().builder()
+                                                                              .value(message.getValue())
+                                                                              .sensor(byId.get())
+                                                                              .createdAt(OffsetDateTime.now())
+                                                                              .build());
                 } catch (NumberFormatException | JsonSyntaxException e) {
                     log.info("Exception: " + e.getMessage());
                 }

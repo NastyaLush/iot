@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class UpdateRequest {
-    private String type;
+    private String deviceId;
     private Double value;
 }

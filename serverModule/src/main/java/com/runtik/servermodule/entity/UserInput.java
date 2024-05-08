@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,12 +17,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Devices {
+public class UserInput {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    @Column(nullable = false, unique = true)
-    private String functionalType;
-    @Column(nullable = false, unique = true)
-    private String deviceUrl;
+    private int id;
+    private Double value;
+    @ManyToOne(optional = false)
+    private Device device;
+    private OffsetDateTime createdAt;
 }

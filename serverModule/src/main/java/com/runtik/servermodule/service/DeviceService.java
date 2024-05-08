@@ -1,7 +1,7 @@
 package com.runtik.servermodule.service;
 
-import com.runtik.servermodule.dto.PostDeviceRequest;
-import com.runtik.servermodule.entity.Devices;
+import com.runtik.servermodule.dto.DeviceDTO;
+import com.runtik.servermodule.entity.Device;
 import com.runtik.servermodule.repository.DeviceRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -12,22 +12,18 @@ import org.springframework.stereotype.Service;
 public class DeviceService {
     private final DeviceRepository deviceRepository;
 
-    public List<String> getAviableDevices() {
+    public List<DeviceDTO> getAviableDevices() {
         return deviceRepository.findByDeviceUrlIsNotNull()
                                .stream()
-                               .map(Devices::getFunctionalType)
+                               .map(device -> new DeviceDTO(device.getId(), device.getType()))
                                .toList();
     }
 
-    public String getDeviceUrlByType(String type) {
-        return deviceRepository.findByFunctionalType(type)
-                               .getDeviceUrl();
+    public String getDeviceUrlBuId(String id) {
+        return deviceRepository.findById(id).get().getDeviceUrl();
     }
 
-    public void save(PostDeviceRequest postDeviceRequest) {
-        deviceRepository.save(Devices.builder()
-                                     .deviceUrl(postDeviceRequest.deviceUrl())
-                                     .functionalType(postDeviceRequest.functionalType())
-                                     .build());
+    public void save(Device device) {
+        deviceRepository.save(device);
     }
 }

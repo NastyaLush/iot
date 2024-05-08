@@ -13,8 +13,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class DeviceClientService {
     private final DeviceService deviceService;
 
-    public void update(String type, Double step, Integer iterations) {
-        String deviceUrlByType = deviceService.getDeviceUrlByType(type);
+    public void update(String id, Double step, Integer iterations) {
+        String deviceUrlByType = deviceService.getDeviceUrlBuId(id);
         log.info("update temp step {} iterations{}", step, iterations);
         WebClient client = WebClient.create(deviceUrlByType);
         client.post()

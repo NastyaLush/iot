@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class Message {
-    private String type;
+    private String id;
     private Double value;
 }

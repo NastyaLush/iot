@@ -1,7 +1,7 @@
 package com.runtik.servermodule;
 
 import com.runtik.servermodule.dto.UpdateRequest;
-import com.runtik.servermodule.service.CharacteristicService;
+import com.runtik.servermodule.service.UserInputService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("characteristic")
-public class CharacteristicController {
-    private final CharacteristicService characteristicService;
+@RequestMapping("value")
+public class UserInputController {
+    private final UserInputService userInputService;
     @GetMapping
-    public Double get(@RequestParam String characteristic) {
-        return characteristicService.temp(characteristic);
+    public Double get(@RequestParam String id) {
+        return userInputService.getValueBySensorId(id);
     }
     @PostMapping
     public void post(@RequestBody UpdateRequest updateRequest){
-        characteristicService.update(updateRequest);
+        userInputService.update(updateRequest);
     }
 }
