@@ -27,7 +27,7 @@ public class SensorController {
     }
 
     @PostMapping
-    public void registerNewSensor(Sensor sensor) {
+    public void registerNewSensor(@RequestBody Sensor sensor) {
         sensorService.registerNewSensor(sensor);
     }
 

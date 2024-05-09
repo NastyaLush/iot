@@ -30,8 +30,8 @@ public class MqttPublisher {
             throw new RuntimeException(e);
         }
     }
-    public void publish(String topic, String data) throws MqttException {
-        MqttMessage message = new MqttMessage(gson.toJson(new Message(topic, Double.parseDouble(data))).getBytes());
+    public void publish( String data) throws MqttException {
+        MqttMessage message = new MqttMessage(data.getBytes());
         message.setQos(qos);
         client.publish("topic123", message);
     }
