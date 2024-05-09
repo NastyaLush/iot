@@ -10,7 +10,7 @@
   <name>iot</name>
   <url>http://maven.apache.org</url>
   <modules>
-    <module>temperatureSensor</module>
+
   </modules>
 
   <properties>
