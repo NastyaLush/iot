@@ -12,6 +12,31 @@ services:
       - vkdb-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./sensors/src/main/resources/:/etc/prometheus/
+#      - prometheus_data:/prometheus_iot
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    ports:
+      - 9091:9090
+    restart: always
+  grafana:
+    image: grafana/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    ports:
+      - 3001:3000
+#    volumes:
+#      - grafana_data:/var/lib/grafana_iot
+    restart: always
 
 volumes:
-  vkdb-data:
+  vkdb-data: { }
+  prometheus_data: { }
+#  grafana_data: { }
