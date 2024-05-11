@@ -1,5 +1,5 @@
 package com.runtik.airconditioner;
 
-public record PostDeviceRequest(String functionalType,
+public record PostDeviceRequest(String id, String functionalType,
                                 String deviceUrl) {
 }

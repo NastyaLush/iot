@@ -25,7 +25,7 @@ public class AirController {
     public void init() {
         WebClient client = WebClient.create(serverUrl);
         client.post()
-              .body(Mono.fromCallable(() -> new PostDeviceRequest("TEMPERATURE", "http://localhost:9080")), PostDeviceRequest.class)
+              .body(Mono.fromCallable(() -> new PostDeviceRequest("1", "TEMPERATURE", "http://localhost:9080")), PostDeviceRequest.class)
               .retrieve()
               .bodyToMono(Void.class)
               .block();

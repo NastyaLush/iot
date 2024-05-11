@@ -9,4 +9,5 @@ public interface DeviceRepository extends JpaRepository<Device, String> {
     List<Device> findByDeviceUrlIsNotNull();
     @Override
     Optional<Device> findById(String id);
+    Optional<Device> findByType(String type);
 }

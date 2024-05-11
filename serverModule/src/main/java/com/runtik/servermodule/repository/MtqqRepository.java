@@ -6,6 +6,7 @@ import com.runtik.servermodule.dto.Message;
 import com.runtik.servermodule.entity.CurrentSensorValue;
 import com.runtik.servermodule.entity.Sensor;
 import com.runtik.servermodule.service.SensorService;
+import com.runtik.servermodule.service.UserInputService;
 import jakarta.annotation.PostConstruct;
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Repository;
 public class MtqqRepository {
     private final CurrentSensorValueRepository currentSensorValueRepository;
     private final SensorRepository sensorRepository;
+    private final UserInputService userInputService;
     @Getter
     @Value("${broker.qos}")
     private int qos;
@@ -66,6 +68,7 @@ public class MtqqRepository {
                                                                               .sensor(byId.get())
                                                                               .createdAt(OffsetDateTime.now())
                                                                               .build());
+                    userInputService.correctValueIfNecessary(byId.get().getType());
                 } catch (NumberFormatException | JsonSyntaxException e) {
                     log.info("Exception: " + e.getMessage());
                 }

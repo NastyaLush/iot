@@ -1,0 +1,1 @@
+INSERT INTO init_user_values (value, type, delta) VALUES (20, 'TEMPERATURE', 2);
