@@ -2,6 +2,7 @@ package com.runtik.airconditioner;
 
 import com.google.gson.Gson;
 import jakarta.annotation.PostConstruct;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,14 +19,13 @@ public class AirController {
     private final UpdateTemperatureService updateTemperatureService;
     @Value("${my.server.url}")
     private String serverUrl;
-    private Gson gson = new Gson();
 
 
     @PostConstruct
     public void init() {
         WebClient client = WebClient.create(serverUrl);
         client.post()
-              .body(Mono.fromCallable(() -> new PostDeviceRequest("1", "TEMPERATURE", "http://localhost:9080")), PostDeviceRequest.class)
+              .body(Mono.fromCallable(() -> new PostDeviceRequest(UUID.randomUUID().toString(), "TEMPERATURE", "http://localhost:9080")), PostDeviceRequest.class)
               .retrieve()
               .bodyToMono(Void.class)
               .block();
