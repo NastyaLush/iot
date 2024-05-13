@@ -32,12 +32,20 @@ public class UserInputService {
             //throw new IllegalArgumentException("this device does not exist");
             return;
         }
+        if (deviceByType.get().getMode().equals("work")) {
+            log.info("device with type {} is already on work" , type);
+            return;
+        }
         changeValue(deviceByType.get(), valueChange);
     }
 
     public Double getValueBySensorId(String id) {
         log.info("get value for sensor with id {} " , id);
-        Optional<CurrentSensorValue> currentById = currentSensorValueRepository.findBySensorId(id);
+        Optional<Sensor> currentSensor = sensorRepository.findById(id);
+        if (currentSensor.isEmpty()) {
+            throw new IllegalArgumentException("no sensor found");
+        }
+        Optional<CurrentSensorValue> currentById = currentSensorValueRepository.findFirstBySensorOrderByCreatedAtDesc(currentSensor.get());
         if (currentById.isEmpty()) {
             throw new IllegalArgumentException("this sensor does not send any data");
         }
@@ -47,6 +55,7 @@ public class UserInputService {
 
     public void update(UpdateRequest updateRequest) {
         log.info("update request " + updateRequest);
+
         Optional<Device> deviceById = deviceRepository.findById(updateRequest.getDeviceId());
         if (deviceById.isEmpty()) {
             throw new IllegalArgumentException("this device does not exist");
@@ -61,6 +70,9 @@ public class UserInputService {
     }
 
     private void changeValue(Device device, double valueChange){
+        if (valueChange == 0) {
+            return;
+        }
         deviceClientService.update(device.getId(), valueChange / ITERATIONS, ITERATIONS);
     }
 
@@ -94,10 +106,9 @@ public class UserInputService {
 
     private double getValueFromSensors(String type){
         List<Sensor> currentSensors = sensorRepository.findByType(type);
-        List<String> currentSensorsIds = currentSensors.stream().map(Sensor::getId).toList();
         List<Optional<CurrentSensorValue>> currentValues = new ArrayList<>();
-        for (String id : currentSensorsIds) {
-            Optional<CurrentSensorValue> currentById = currentSensorValueRepository.findBySensorId(id);
+        for (Sensor sensor : currentSensors) {
+            Optional<CurrentSensorValue> currentById = currentSensorValueRepository.findFirstBySensorOrderByCreatedAtDesc(sensor);
             currentValues.add(currentById);
         }
 
@@ -109,8 +120,9 @@ public class UserInputService {
         }).average();
 
         if (currentAverageValue.isEmpty()) {
-            throw new IllegalArgumentException("No information about this type of sensors");
+            throw new IllegalArgumentException("No information about this type of sensors " + type);
         }
+        log.info("current average value is " + currentAverageValue.getAsDouble());
         return currentAverageValue.getAsDouble();
     }
 }

@@ -19,13 +19,16 @@ public class AirController {
     private final UpdateTemperatureService updateTemperatureService;
     @Value("${my.server.url}")
     private String serverUrl;
+    private String uuid;
 
 
     @PostConstruct
     public void init() {
         WebClient client = WebClient.create(serverUrl);
+        uuid = UUID.randomUUID().toString();
         client.post()
-              .body(Mono.fromCallable(() -> new PostDeviceRequest(UUID.randomUUID().toString(), "TEMPERATURE", "http://localhost:9080")), PostDeviceRequest.class)
+                .uri("/registerNewDevice")
+              .body(Mono.fromCallable(() -> new PostDeviceRequest(uuid, "temperature", "http://localhost:9080", "stop")), PostDeviceRequest.class)
               .retrieve()
               .bodyToMono(Void.class)
               .block();
@@ -35,6 +38,13 @@ public class AirController {
     @PostMapping
     public void changeTemp(@RequestBody Change change) {
         log.info("start change temperature step {} iterations{}", change.step(), change.iterations());
-        updateTemperatureService.startChanging(change.step(), change.iterations());
+        WebClient client = WebClient.create(serverUrl);
+        client.post()
+                .uri("/changeDeviceMode")
+                .body(Mono.fromCallable(() -> new PostDeviceRequest(uuid, "temperature", "http://localhost:9080", "work")), PostDeviceRequest.class)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+        updateTemperatureService.startChanging(change.step(), change.iterations(), client, new PostDeviceRequest(uuid, "temperature", "http://localhost:9080", "stop"));
     }
 }

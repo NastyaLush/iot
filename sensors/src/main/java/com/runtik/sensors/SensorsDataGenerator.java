@@ -36,7 +36,7 @@ public class SensorsDataGenerator {
 
     }
 
-    @Scheduled(fixedRate = 30000) // Send data every 10 seconds
+    @Scheduled(fixedRate = 10000) // Send data every 10 seconds
     public void sendData() {
         for (Sensor sensor : sensors.values()) {
             Double sensorData = restTemplate.getForObject("http://localhost:8080/" + sensor.type(), Double.class);

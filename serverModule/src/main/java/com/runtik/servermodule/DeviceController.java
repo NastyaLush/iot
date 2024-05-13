@@ -25,9 +25,15 @@ public class DeviceController {
         log.info("Get available characteristics");
         return deviceService.getAviableDevices();
     }
-    @PostMapping
+    @PostMapping(value="/registerNewDevice")
     public void registerNewDevice(@RequestBody Device device){
         log.info("Registering new device {} ", device);
         deviceService.save(device);
+    }
+
+    @PostMapping(value="/changeDeviceMode")
+    public void changeDeviceMode(@RequestBody Device device){
+        log.info("Change mode of device {} ", device);
+        deviceService.update(device);
     }
 }

@@ -20,4 +20,6 @@ public class Device {
     private String deviceUrl;
     @Column(nullable = false)
     private String type;
+    @Column(nullable = false)
+    private String mode;
 }
