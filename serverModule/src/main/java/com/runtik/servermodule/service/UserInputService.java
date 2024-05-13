@@ -95,7 +95,7 @@ public class UserInputService {
         double currentValue = getValueFromSensors(type);
 
         if (currentValue > lastUserValue + initUserValues.getDelta()) {
-            return currentValue - (lastUserValue - initUserValues.getDelta() + 0.5);
+            return -(currentValue - (lastUserValue - initUserValues.getDelta() + 0.5));
         }
 
         if (currentValue < lastUserValue - initUserValues.getDelta()) {
