@@ -15,19 +15,28 @@ public class UpdateTemperatureService {
     private final AtomicReference<CompletableFuture<Void>> executingTask = new AtomicReference<>(null);
     private final RoomService roomService;
 
-    public void startChanging(Double step, Integer iterations, WebClient client, PostDeviceRequest postDeviceRequest) {
+    public void startChanging(String uuid, Double step, Integer iterations, WebClient client, PostDeviceRequest postDeviceRequest) {
         log.info("new task: starting changing step " + step + " iterations " + iterations);
         CompletableFuture<Void> existingTask = executingTask.getAndSet(null);
         if (existingTask != null) {
             existingTask.complete(null);
         }
+        client.post()
+              .uri("/changeDeviceMode")
+              .body(Mono.fromCallable(() -> new PostDeviceRequest(uuid, "temperature", "http://localhost:9080", "work")), PostDeviceRequest.class)
+              .retrieve()
+              .bodyToMono(Void.class)
+              .block();
         CompletableFuture<Void> newTask = executeCommandNTimes(step, iterations);
-        newTask.thenRun(() -> {client.post()
-                .uri("/changeDeviceMode")
-                .body(Mono.fromCallable(() -> postDeviceRequest), PostDeviceRequest.class)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();});
+        newTask.thenRun(() -> {
+            client.post()
+                  .uri("/changeDeviceMode")
+                  .body(Mono.fromCallable(() -> postDeviceRequest), PostDeviceRequest.class)
+                  .retrieve()
+                  .bodyToMono(Void.class)
+                  .block();
+            System.out.println("finished changing step " + step + " iterations " + iterations);
+        });
         executingTask.set(newTask);
 
     }

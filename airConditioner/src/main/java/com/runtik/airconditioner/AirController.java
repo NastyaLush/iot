@@ -39,12 +39,6 @@ public class AirController {
     public void changeTemp(@RequestBody Change change) {
         log.info("start change temperature step {} iterations{}", change.step(), change.iterations());
         WebClient client = WebClient.create(serverUrl);
-        client.post()
-                .uri("/changeDeviceMode")
-                .body(Mono.fromCallable(() -> new PostDeviceRequest(uuid, "temperature", "http://localhost:9080", "work")), PostDeviceRequest.class)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
-        updateTemperatureService.startChanging(change.step(), change.iterations(), client, new PostDeviceRequest(uuid, "temperature", "http://localhost:9080", "stop"));
+        updateTemperatureService.startChanging(uuid,change.step(), change.iterations(), client, new PostDeviceRequest(uuid, "temperature", "http://localhost:9080", "stop"));
     }
 }

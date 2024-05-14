@@ -62,6 +62,7 @@ public class MtqqRepository {
                     Optional<Sensor> byId = sensorRepository.findById(message.getId());
                     if(byId.isEmpty()){
                         log.info("sensor {} not found", message.getId());
+                        return;
                     }
                     currentSensorValueRepository.save(new CurrentSensorValue().builder()
                                                                               .value(message.getValue())

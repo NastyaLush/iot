@@ -26,7 +26,6 @@ public class UserInputService {
 
     public void correctValueIfNecessary(String type) {
         log.info("check value for sensor with type {} " , type);
-        double valueChange = getValueChange(type, getLastUserValue(type));
         Optional<Device> deviceByType = deviceRepository.findByType(type);
         if (deviceByType.isEmpty()) {
             //throw new IllegalArgumentException("this device does not exist");
@@ -36,6 +35,7 @@ public class UserInputService {
             log.info("device with type {} is already on work" , type);
             return;
         }
+        double valueChange = getValueChange(type, getLastUserValue(type));
         changeValue(deviceByType.get(), valueChange);
     }
 
