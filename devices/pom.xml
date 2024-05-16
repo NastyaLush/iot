@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.runtik</groupId>
-    <artifactId>airConditioner</artifactId>
+    <artifactId>devices</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>airConditioner</name>
     <description>airConditioner</description>

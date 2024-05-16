@@ -1,13 +1,13 @@
-package com.runtik.airconditioner;
+package com.runtik.devices;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AirConditionerApplication {
+public class DevicesApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AirConditionerApplication.class, args);
+        SpringApplication.run(DevicesApplication.class, args);
     }
 
 }

@@ -1,10 +1,10 @@
-package com.runtik.airconditioner;
+package com.runtik.devices;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AirConditionerApplicationTests {
+class DevicesApplicationTests {
 
     @Test
     void contextLoads() {
