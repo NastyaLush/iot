@@ -51,7 +51,7 @@ public class UpdateTemperatureService {
                     roomService.updateTemp(step);
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
-                    future.cancel(true);
+                    future.complete(null);
                     return;
                 }
             }

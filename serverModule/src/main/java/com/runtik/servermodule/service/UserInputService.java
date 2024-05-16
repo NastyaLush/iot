@@ -9,7 +9,6 @@ import java.util.*;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -81,7 +80,7 @@ public class UserInputService {
         if (currentDevice.isEmpty()) {
             throw new IllegalArgumentException("no devices found for type " + type + " of values");
         }
-        Optional<UserInput> lastUserInput = userInputRepository.findTopByDeviceId(currentDevice.get().getId());
+        Optional<UserInput> lastUserInput = userInputRepository.findFirstByDeviceIdOrderByCreatedAtDesc(currentDevice.get().getId());
         if (lastUserInput.isEmpty()) {
             InitUserValues initUserValues = initUserValuesRepository.findByType(type);
             return initUserValues.getValue();

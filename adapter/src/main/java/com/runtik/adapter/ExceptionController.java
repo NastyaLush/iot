@@ -10,7 +10,7 @@ import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice
 @Log4j2
-public class ExseptionController {
+public class ExceptionController {
     @ExceptionHandler(value = {MqttException.class})
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public void resourceNotFoundException(MqttException ex, WebRequest request) {
