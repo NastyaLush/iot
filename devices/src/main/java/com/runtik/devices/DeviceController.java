@@ -49,4 +49,25 @@ public class DeviceController {
         WebClient client = WebClient.create(serverUrl);
         updateValueService.startChanging("temperature", currentDevices.get("temperature"), change.step(), change.iterations(), client);
     }
+
+    @PostMapping(value = "/humidity")
+    public void changeHumidity(@RequestBody Change change) {
+        log.info("start change humidity step {} iterations{}", change.step(), change.iterations());
+        WebClient client = WebClient.create(serverUrl);
+        updateValueService.startChanging("humidity", currentDevices.get("humidity"), change.step(), change.iterations(), client);
+    }
+
+    @PostMapping(value = "/oxygen")
+    public void changeOxygen(@RequestBody Change change) {
+        log.info("start change oxygen step {} iterations{}", change.step(), change.iterations());
+        WebClient client = WebClient.create(serverUrl);
+        updateValueService.startChanging("oxygen", currentDevices.get("oxygen"), change.step(), change.iterations(), client);
+    }
+
+    @PostMapping(value = "/light")
+    public void changeLight(@RequestBody Change change) {
+        log.info("start change light step {} iterations{}", change.step(), change.iterations());
+        WebClient client = WebClient.create(serverUrl);
+        updateValueService.startChanging("light", currentDevices.get("light"), change.step(), change.iterations(), client);
+    }
 }
