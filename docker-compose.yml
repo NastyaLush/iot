@@ -20,8 +20,7 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-    ports:
-      - 9091:9090
+    network_mode: "host"
     restart: always
   grafana:
     image: grafana/grafana
@@ -30,8 +29,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - prometheus
-    ports:
-      - 3001:3000
+    network_mode: "host"
 #    volumes:
 #      - grafana_data:/var/lib/grafana_iot
     restart: always
