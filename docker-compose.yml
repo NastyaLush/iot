@@ -1,5 +1,22 @@
 version: "3.9"
 services:
+#  sensors:
+#    image: sensors:0.0.1-SNAPSHOT
+#    ports:
+#      - "8083:8083"
+#  servermodule:
+#    image: servermodule:0.0.1-SNAPSHOT
+#    ports:
+#      - "8082:8082"
+#    depends_on:
+#      - postgres
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/testdb
+#      - SPRING_DATASOURCE_USERNAME=user
+#      - SPRING_DATASOURCE_PASSWORD=password
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+
+
   postgres:
     image: postgres:14.8-alpine3.18
     environment:
@@ -8,20 +25,27 @@ services:
       POSTGRES_PASSWORD: "password"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
-#      - ../2. Init Database:/docker-entrypoint-initdb.d
+      #      - ../2. Init Database:/docker-entrypoint-initdb.d
       - vkdb-data:/var/lib/postgresql/data
     ports:
       - "5433:5432"
   prometheus:
     image: prom/prometheus
     volumes:
-      - ./sensors/src/main/resources/:/etc/prometheus/
-#      - prometheus_data:/prometheus_iot
+      - ./serverModule/src/main/resources/:/etc/prometheus/
+    #      - prometheus_data:/prometheus_iot
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-    network_mode: "host"
+    ports:
+      - 9091:9090
     restart: always
+    networks:
+      monitoring:
+        aliases:
+          - prometheus
   grafana:
     image: grafana/grafana
     environment:
@@ -29,12 +53,19 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - prometheus
-    network_mode: "host"
-#    volumes:
-#      - grafana_data:/var/lib/grafana_iot
+    ports:
+      - 3001:3000
+    #    volumes:
+    #      - grafana_data:/var/lib/grafana_iot
     restart: always
+    networks:
+      monitoring:
+        aliases:
+          - grafana
 
 volumes:
   vkdb-data: { }
   prometheus_data: { }
 #  grafana_data: { }
+networks:
+  monitoring:

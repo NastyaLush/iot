@@ -1,11 +1,7 @@
 package com.runtik.servermodule.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +18,7 @@ public class CurrentSensorValue {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private Double value;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
     private Sensor sensor;
     private OffsetDateTime createdAt;
 }

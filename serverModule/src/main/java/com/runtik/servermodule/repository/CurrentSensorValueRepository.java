@@ -1,6 +1,8 @@
 package com.runtik.servermodule.repository;
 
 import com.runtik.servermodule.entity.CurrentSensorValue;
+
+import java.util.List;
 import java.util.Optional;
 
 import com.runtik.servermodule.entity.Sensor;

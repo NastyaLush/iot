@@ -22,7 +22,7 @@ public class SensorsDataGenerator {
     private final MeterRegistry meterRegistry;
     @PostConstruct
     public void init() {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 10; i++) {
             UUID uuid = UUID.randomUUID();
             Type type = Type.values()[(int) (Math.random() * Type.values().length)];
             Sensor sensor = new Sensor(uuid, type.getValue());
@@ -36,7 +36,7 @@ public class SensorsDataGenerator {
 
     }
 
-    @Scheduled(fixedRate = 20000) // Send data every 20 seconds
+    @Scheduled(fixedRate = 10000) // Send data every 20 seconds
     public void sendData() {
         for (Sensor sensor : sensors.values()) {
             Double sensorData = restTemplate.getForObject("http://localhost:8080/" + sensor.type(), Double.class);

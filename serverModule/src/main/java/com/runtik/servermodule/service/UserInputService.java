@@ -38,6 +38,26 @@ public class UserInputService {
         changeValue(deviceByType.get(), valueChange);
     }
 
+    public List<CurrentSensorValue> getValueByType(String type) {
+        log.info("get value for sensors with type {} " , type);
+        List<Sensor> currentSensors = sensorRepository.findByType(type);
+        if (currentSensors.isEmpty()) {
+            throw new IllegalArgumentException("no sensor found");
+        }
+        List<CurrentSensorValue> currentSensorValues = new ArrayList<>();
+        for (Sensor sensor : currentSensors) {
+            Optional<CurrentSensorValue> currentById = currentSensorValueRepository.findFirstBySensorOrderByCreatedAtDesc(sensor);
+            if (currentById.isEmpty()) {
+                log.info("this sensor does not send any data");
+            } else {
+                currentSensorValues.add(currentById.get());
+            }
+        }
+
+        return currentSensorValues;
+    }
+
+
     public Double getValueBySensorId(String id) {
         log.info("get value for sensor with id {} " , id);
         Optional<Sensor> currentSensor = sensorRepository.findById(id);
@@ -58,6 +78,10 @@ public class UserInputService {
         Optional<Device> deviceById = deviceRepository.findById(updateRequest.getDeviceId());
         if (deviceById.isEmpty()) {
             throw new IllegalArgumentException("this device does not exist");
+        }
+        if (deviceById.get().getMode().equals("work")) {
+            log.info("device with id {} is already on work" , updateRequest.getDeviceId());
+            return;
         }
         userInputRepository.save(UserInput.builder()
                                           .value(updateRequest.getValue())
